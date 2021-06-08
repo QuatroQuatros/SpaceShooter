@@ -177,5 +177,4 @@ update do
 		enemy = Enemy.new
 	end
 end
-
 show
