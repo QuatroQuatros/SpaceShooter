@@ -4,6 +4,10 @@ set fps_cap: 20
 set width: 512
 set height: 576
 set title: "Meteor Hater"
+
+laser_sfx = Sound.new("../assets/Music/Laser/laser4.wav")
+meteor_sfx = Sound.new("../assets/Music/explosion.wav")
+
 bullets = []
 
 fundo = Sprite.new(
@@ -77,9 +81,9 @@ end
 class Enemy
 	attr_accessor :enemy, :have_enemy
 	def initialize
-		enemys_path = ["meteor.png", "meteor2.png"]
-		e = rand(0..1)
-		x = rand(30..440)/10 * 10
+		enemys_path = ["meteor.png", "meteor2.png", "meteor3.png", "meteor4.png"]
+		e = rand(0..3)
+		x = rand(30..430)/10 * 10
 		@have_enemy = true
 		@enemy = Sprite.new(
 			"../assets/Enemys/" + enemys_path[e],
@@ -96,9 +100,12 @@ end
 class Game
 	attr_accessor :score
 	def initialize
+		@song = Music.new("../assets/Music/meteor_chill.ogg")
 		@score = 0
 		@end = false
 		@points = Text.new(@score, color: 'white', x: 435, y: 10, size: 25)
+		@song.loop = true
+		@song.play
 	end
 
 	def update_bullet(bullets)
@@ -154,6 +161,7 @@ on :key_down do |event|
 	if event.key == "space"
 		b = Bullet.new(nave.x, nave.y)
 		bullets.push(b)
+		laser_sfx.play
 	end
 end
 
@@ -165,6 +173,7 @@ update do
 	if game.bullet_colide?(bullets, enemy) == true
 		enemy.enemy.remove
 		enemy = Enemy.new
+		meteor_sfx.play
 		bullets[-1].bullet.remove
 		bullets.pop
 		game.score += 5
